@@ -730,20 +730,20 @@ void BuildIdentifyResult(uv_work_t *req, Local<Value> *argv) {
         argv[0] = Nan::Undefined();
         Local<Object> out = Nan::New<Object>();
 
-        out->Set(Nan::New<String>("width").ToLocalChecked(), Nan::New<Integer>(static_cast<int>(context->image.columns())));
-        out->Set(Nan::New<String>("height").ToLocalChecked(), Nan::New<Integer>(static_cast<int>(context->image.rows())));
-        out->Set(Nan::New<String>("depth").ToLocalChecked(), Nan::New<Integer>(static_cast<int>(context->image.depth())));
+        out->Set(Nan::New<String>("width").ToLocalChecked(), Nan::New<Number>(static_cast<int>(context->image.columns())));
+        out->Set(Nan::New<String>("height").ToLocalChecked(), Nan::New<Number>(static_cast<int>(context->image.rows())));
+        out->Set(Nan::New<String>("depth").ToLocalChecked(), Nan::New<Number>(static_cast<int>(context->image.depth())));
         out->Set(Nan::New<String>("format").ToLocalChecked(), Nan::New<String>(context->image.magick().c_str()).ToLocalChecked());
         out->Set(Nan::New<String>("colorspace").ToLocalChecked(), Nan::New<String>(MagickCore::CommandOptionToMnemonic(MagickCore::MagickColorspaceOptions, static_cast<ssize_t>(context->image.colorSpace()))).ToLocalChecked());
 
         Local<Object> out_density = Nan::New<Object>();
         Magick::Geometry density = context->image.density();
-        out_density->Set(Nan::New<String>("width").ToLocalChecked(), Nan::New<Integer>(static_cast<int>(density.width())));
-        out_density->Set(Nan::New<String>("height").ToLocalChecked(), Nan::New<Integer>(static_cast<int>(density.height())));
+        out_density->Set(Nan::New<String>("width").ToLocalChecked(), Nan::New<Number>(static_cast<int>(density.width())));
+        out_density->Set(Nan::New<String>("height").ToLocalChecked(), Nan::New<Number>(static_cast<int>(density.height())));
         out->Set(Nan::New<String>("density").ToLocalChecked(), out_density);
 
         Local<Object> out_exif = Nan::New<Object>();
-        out_exif->Set(Nan::New<String>("orientation").ToLocalChecked(), Nan::New<Integer>(atoi(context->image.attribute("EXIF:Orientation").c_str())));
+        out_exif->Set(Nan::New<String>("orientation").ToLocalChecked(), Nan::New<Number>(atoi(context->image.attribute("EXIF:Orientation").c_str())));
         out->Set(Nan::New<String>("exif").ToLocalChecked(), out_exif);
 
         argv[1] = out;
@@ -905,10 +905,10 @@ NAN_METHOD(GetConstPixels) {
         Magick::PixelPacket pixel = pixels[ i ];
         Local<Object> color = Nan::New<Object>();
 
-        color->Set(Nan::New<String>("red").ToLocalChecked(),     Nan::New<Integer>(pixel.red));
-        color->Set(Nan::New<String>("green").ToLocalChecked(),   Nan::New<Integer>(pixel.green));
-        color->Set(Nan::New<String>("blue").ToLocalChecked(),    Nan::New<Integer>(pixel.blue));
-        color->Set(Nan::New<String>("opacity").ToLocalChecked(), Nan::New<Integer>(pixel.opacity));
+        color->Set(Nan::New<String>("red").ToLocalChecked(),     Nan::New<Number>(pixel.red));
+        color->Set(Nan::New<String>("green").ToLocalChecked(),   Nan::New<Number>(pixel.green));
+        color->Set(Nan::New<String>("blue").ToLocalChecked(),    Nan::New<Number>(pixel.blue));
+        color->Set(Nan::New<String>("opacity").ToLocalChecked(), Nan::New<Number>(pixel.opacity));
 
         out->Set(i, color);
     }
@@ -1015,9 +1015,9 @@ NAN_METHOD(QuantizeColors) {
         int b = ((int) colors[x].blue) / 255;
         if (b > 255) b = 255;
 
-        color->Set(Nan::New<String>("r").ToLocalChecked(), Nan::New<Integer>(r));
-        color->Set(Nan::New<String>("g").ToLocalChecked(), Nan::New<Integer>(g));
-        color->Set(Nan::New<String>("b").ToLocalChecked(), Nan::New<Integer>(b));
+        color->Set(Nan::New<String>("r").ToLocalChecked(), Nan::New<Number>(r));
+        color->Set(Nan::New<String>("g").ToLocalChecked(), Nan::New<Number>(g));
+        color->Set(Nan::New<String>("b").ToLocalChecked(), Nan::New<Number>(b));
 
         char hexcol[16];
         snprintf(hexcol, sizeof hexcol, "%02x%02x%02x", r, g, b);
@@ -1155,7 +1155,7 @@ NAN_METHOD(Version) {
 NAN_METHOD(GetQuantumDepth) {
     Nan::HandleScope();
 
-    info.GetReturnValue().Set(Nan::New<Integer>(MAGICKCORE_QUANTUM_DEPTH));
+    info.GetReturnValue().Set(Nan::New<Number>(MAGICKCORE_QUANTUM_DEPTH));
 }
 
 void init(Handle<Object> exports) {
